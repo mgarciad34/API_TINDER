@@ -2,10 +2,11 @@
   "name": "api_tinder",
   "description": "API REST TINDER EN SEQUELIZE Y GRAPQL",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx sequelize-cli init"
+    "start": "node src/index.js",
+    "dev": "npx nodemon src/index.js"
   },
   "repository": {
     "type": "git",
@@ -19,13 +20,12 @@
   },
   "homepage": "https://github.com/mgarciad34/API_TINDER#readme",
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.19.2",
     "mysql2": "^3.9.7",
+    "nodemon": "^3.1.0",
     "sequelize": "^6.37.3"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.2"
   }
 }
