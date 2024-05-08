@@ -36,11 +36,11 @@ async function comprobarConexion(){
 
 //Imprimimos el resultado en número
 // Usar en los CRUD
-comprobarConexion().then(result => {
+/*comprobarConexion().then(result => {
     console.log(result);
 }).catch(error => {
     console.error('Error al verificar la conexión:', error);
 });
-
+*/
 
 module.exports = {comprobarConexion}
