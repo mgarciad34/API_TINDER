@@ -13,7 +13,7 @@ app.get('/', (req, res) =>{
     res.send('Abierto el servicio de Tinder')
 })
 
-// Aqui llamamos al los archivos router
+// Aqui llamamos a los archivos router
 app.use(api, routerRegistro)
 
 

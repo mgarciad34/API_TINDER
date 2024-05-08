@@ -21,7 +21,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     Foto: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.BLOB,
       allowNull: true
     },
     Nick: {

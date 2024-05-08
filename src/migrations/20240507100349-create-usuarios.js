@@ -22,7 +22,7 @@ module.exports = {
         allowNull: false
       },
       Foto: {
-        type: Sequelize.STRING
+        type: Sequelize.BLOB
       },
       Nick: {
         type: Sequelize.STRING,
