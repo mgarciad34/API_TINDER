@@ -8,6 +8,7 @@ const app = express()
 
 // Mostramos rutas con el tipo de peticion por consola
 app.use(morgan("dev"))
+app.use(express.json())
 
 app.get('/', (req, res) =>{
     res.send('Abierto el servicio de Tinder')
