@@ -4,6 +4,6 @@ const usuarios = require('../controllers/usuarios');
 const router = express.Router();
 
 // Definir la ruta para registrar un nuevo usuario
-router.post('/registrar', usuarios.registrarUsuario);
+router.post('/registrar', usuarios.crearUsuario);
 
 module.exports = router;
