@@ -1,19 +1,15 @@
 "use strict";
 const { Model } = require("sequelize");
+const usuarios = require("./usuarios");
 module.exports = (sequelize, DataTypes) => {
   class Amistades extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      amistades.belongsTo(usuarios, { as: "Usuario", foreignKey: "UsuarioID" });
-      usuarios.hasMany(amistades, { as: "amistades", foreignKey: "UsuarioID" });
-
-      amistades.belongsTo(usuarios, { as: "Amigo", foreignKey: "AmigoID" });
-      usuarios.hasMany(amistades, {
-        as: "Amigo_amistades",
+      Amistades.belongsTo(models.Usuarios, {
+        as: "Usuario",
+        foreignKey: "UsuarioID",
+      });
+      Amistades.belongsTo(models.Usuarios, {
+        as: "Amigo",
         foreignKey: "AmigoID",
       });
     }

@@ -1,50 +1,33 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Usuarios extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      Usuarios.belongsTo(roles, { as: "Rol", foreignKey: "RolID" });
-      roles.hasMany(Usuarios, { as: "usuarios", foreignKey: "RolID" });
-
-      Usuarios.hasMany(amistades, { as: "amistades", foreignKey: "UsuarioID" });
-      amistades.belongsTo(Usuarios, { as: "usuario", foreignKey: "UsuarioID" });
-
-      Usuarios.hasMany(inscripcioneseventos, {
+      Usuarios.belongsTo(models.Roles, { as: "Rol", foreignKey: "RolID" });
+      Usuarios.hasMany(models.Amistades, {
+        as: "amistades",
+        foreignKey: "UsuarioID",
+      });
+      Usuarios.hasMany(models.Amistades, {
+        as: "Amigo_amistades",
+        foreignKey: "AmigoID",
+      });
+      Usuarios.hasMany(models.InscripcionesEventos, {
         as: "inscripcioneseventos",
         foreignKey: "UsuarioID",
       });
-      inscripcioneseventos.belongsTo(Usuarios, {
-        as: "Usuario",
+      Usuarios.hasMany(models.Mensajes, {
+        as: "mensajes",
         foreignKey: "UsuarioID",
       });
-
-      Usuarios.hasMany(mensajes, { as: "mensajes", foreignKey: "UsuarioID" });
-      mensajes.belongsTo(Usuarios, { as: "usuario", foreignKey: "UsuarioID" });
-
-      Usuarios.hasMany(preferencias, {
+      Usuarios.hasMany(models.Preferencias, {
         as: "preferencia",
-        foreignKey: "UsuarioID",
-      });
-      preferencias.belongsTo(Usuarios, {
-        as: "Usuario",
-        foreignKey: "UsuarioID",
-      });
-
-      Usuarios.hasMany(rolesasignados, {
-        as: "rolesasignados",
-        foreignKey: "UsuarioID",
-      });
-      rolesasignados.belongsTo(Usuarios, {
-        as: "Usuario",
         foreignKey: "UsuarioID",
       });
     }
   }
+
   Usuarios.init(
     {
       Nombre: DataTypes.STRING,
@@ -60,5 +43,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Usuarios",
     }
   );
+
   return Usuarios;
 };
