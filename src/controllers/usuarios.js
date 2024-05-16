@@ -2,7 +2,8 @@ const bcrypt = require("bcrypt");
 const fs = require("fs");
 const path = require("path");
 const db = require("../database/models");
-const { secret } = require('../database/config/secret');
+const config = require('../database/config/config')
+
 const { enviarCorreo } = require('../database/config/email');
 const jwt = require("jsonwebtoken");
 const UsuarioModel = db.getModel("Usuarios");
@@ -69,7 +70,7 @@ const login = async (req, res) => {
        }
    
        // Si el usuario y la contraseña son correctos, generar un token
-       const token = jwt.sign({ id: usuario.id, email: usuario.Email }, secret.token_secret, {
+       const token = jwt.sign({ id: usuario.id, email: usuario.Email }, config.token, {
          expiresIn: '1h' // Opcional: configurar la expiración del token
        });
    
@@ -113,7 +114,7 @@ const recuperarContrasena = async (req, res) => {
          await usuario.save();
   
          const body = {
-           from: secret.email_usuario,
+           from: config.development.email_user,
            to: `${comprobarEmail}`,
            subject: "Recuperacion de Contraseña",
            html: `<h2>Hola ${comprobarEmail}</h2>
