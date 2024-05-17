@@ -47,23 +47,19 @@ const crearUsuario = async (req, res) => {
 
 const login = async (req, res) => {
      try {
-       // Buscar si ya existe un usuario con el correo electrónico proporcionado
        const usuario = await UsuarioModel.findOne({
          where: { Email: req.body.Email },
        });
    
-       // Si no existe un usuario con ese correo electrónico, devolver un error
        if (!usuario) {
          return res.status(404).json({ error: "Usuario no encontrado" });
        }
    
-       // Verificar si la contraseña proporcionada es correcta
        const contrasenaCorrecta = await bcrypt.compare(
          req.body.Contraseña,
          usuario.Contraseña
        );
    
-       // Si la contraseña no es correcta, devolvera un error
        if (!contrasenaCorrecta) {
          return res.status(401).json({ error: "Contraseña incorrecta" });
        }
@@ -72,11 +68,8 @@ const login = async (req, res) => {
        const token = jwt.sign({ id: usuario.id, email: usuario.Email }, config.development.token_secret, {
          expiresIn: '1h' // Opcional: configurar la expiración del token
        });
-   
-       // Enviar la respuesta con el usuario encontrado y el token JWT
        return res.status(200).json({ usuario, token });
      } catch (error) {
-       // Manejar cualquier error que ocurra durante el proceso
        res.status(500).json({ error: error.message });
        console.error(error);
      }
@@ -107,28 +100,20 @@ const login = async (req, res) => {
 };
 
 const actualizarUsuario = async (req, res) => {
-  const { id } = req.params; // Obtener el ID del usuario de los parámetros de la URL
-  const datosActualizados = req.body; // Obtener los datos a actualizar del cuerpo de la solicitud
+  const { id } = req.params;
+  const datosActualizados = req.body;
 
   try {
-    // Actualizar el usuario con los nuevos datos
     const [filasActualizadas] = await UsuarioModel.update(datosActualizados, {
       where: { id: id }
     });
 
-    // Verificar si se actualizaron filas
     if (filasActualizadas === 0) {
-      // Si no se actualizó ninguna fila, podría ser que los datos son iguales
       return res.status(200).json({ mensaje: "No se realizaron cambios en el usuario." });
     }
-
-    // Obtener los datos actualizados del usuario
     const usuarioActualizado = await UsuarioModel.findByPk(id);
-
-    // Devolver una respuesta con el usuario actualizado
     return res.status(200).json(usuarioActualizado);
   } catch (error) {
-    // Si hay un error en la operación, devolver un error 500
     res.status(500).json({ error: error.message });
     console.error(error);
   }
@@ -142,9 +127,7 @@ const eliminarUsuario = async (req, res) => {
     if (!usuario) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
-
     await usuario.destroy();
-
     return res.status(200).json({ mensaje: "Usuario eliminado correctamente" });
   } catch (error) {
     res.status(500).json({ error: error.message });
