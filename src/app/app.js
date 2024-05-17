@@ -2,6 +2,7 @@ const express = require("express");
 const routerRegistro = require("../router/registro.router");
 const routerLogin = require("../router/login.router");
 const routerUsuario = require("../router/usuario.router");
+const routerEvento = require("../router/evento.router");
 const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 app.use(api, routerRegistro);
 app.use(api, routerLogin);
 app.use(api, routerUsuario);
+app.use(api, routerEvento)
 
 app.listen(PORT, () => {
   console.log(`SwipeSpark Server abierto en el puerto ${PORT}`);
