@@ -3,7 +3,6 @@ const fs = require("fs");
 const path = require("path");
 const db = require("../database/models");
 const config = require('../database/config/config')
-
 const { enviarCorreo } = require('../database/config/email');
 const jwt = require("jsonwebtoken");
 const UsuarioModel = db.getModel("Usuarios");
@@ -70,7 +69,7 @@ const login = async (req, res) => {
        }
    
        // Si el usuario y la contraseña son correctos, generar un token
-       const token = jwt.sign({ id: usuario.id, email: usuario.Email }, config.token, {
+       const token = jwt.sign({ id: usuario.id, email: usuario.Email }, config.development.token_secret, {
          expiresIn: '1h' // Opcional: configurar la expiración del token
        });
    
@@ -83,7 +82,17 @@ const login = async (req, res) => {
      }
    };
 
-const obtenerUsuarioId = async (req, res) => {
+   const obtenerUsuarios = async (req, res) => {
+    try {
+      const usuarios = await UsuarioModel.findAll();
+      return res.status(200).json(usuarios); 
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+      console.error(error);
+    }
+  };
+   
+  const obtenerUsuarioId = async (req, res) => {
      console.log(req.params.id)
   try {
     const usuario = await UsuarioModel.findByPk(req.params.id);
@@ -96,6 +105,53 @@ const obtenerUsuarioId = async (req, res) => {
     console.error(error);
   }
 };
+
+const actualizarUsuario = async (req, res) => {
+  const { id } = req.params; // Obtener el ID del usuario de los parámetros de la URL
+  const datosActualizados = req.body; // Obtener los datos a actualizar del cuerpo de la solicitud
+
+  try {
+    // Actualizar el usuario con los nuevos datos
+    const [filasActualizadas] = await UsuarioModel.update(datosActualizados, {
+      where: { id: id }
+    });
+
+    // Verificar si se actualizaron filas
+    if (filasActualizadas === 0) {
+      // Si no se actualizó ninguna fila, podría ser que los datos son iguales
+      return res.status(200).json({ mensaje: "No se realizaron cambios en el usuario." });
+    }
+
+    // Obtener los datos actualizados del usuario
+    const usuarioActualizado = await UsuarioModel.findByPk(id);
+
+    // Devolver una respuesta con el usuario actualizado
+    return res.status(200).json(usuarioActualizado);
+  } catch (error) {
+    // Si hay un error en la operación, devolver un error 500
+    res.status(500).json({ error: error.message });
+    console.error(error);
+  }
+};
+
+const eliminarUsuario = async (req, res) => {
+  const { id } = req.params; 
+
+  try {
+    const usuario = await UsuarioModel.findByPk(id);
+    if (!usuario) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    await usuario.destroy();
+
+    return res.status(200).json({ mensaje: "Usuario eliminado correctamente" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.error(error);
+  }
+};
+
 const recuperarContrasena = async (req, res) => {
      try {
        const { comprobarEmail } = req.body.Email;
@@ -149,6 +205,9 @@ const recuperarContrasena = async (req, res) => {
 module.exports = {
   crearUsuario,
   login,
+  obtenerUsuarios,
   obtenerUsuarioId,
+  actualizarUsuario,
+  eliminarUsuario,
   recuperarContrasena
 };
