@@ -9,13 +9,25 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      UsuarioID: {
+      usuarioID: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "usuarios",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
-      AmigoID: {
+      amigoID: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "usuarios",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
-      FechaAmistad: {
+      fechaAmistad: {
         type: Sequelize.DATE,
       },
       createdAt: {

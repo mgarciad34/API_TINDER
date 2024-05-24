@@ -1,5 +1,5 @@
 "use strict";
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("inscripcionesEventos", {
@@ -9,13 +9,25 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      UsuarioID: {
+      usuarioID: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "usuarios",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
-      EventoID: {
+      eventoID: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "eventos",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
-      FechaInscripcion: {
+      fechaInscripcion: {
         type: Sequelize.DATE,
       },
       createdAt: {

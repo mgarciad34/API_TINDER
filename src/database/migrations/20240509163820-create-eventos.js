@@ -1,5 +1,5 @@
 "use strict";
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("eventos", {
@@ -9,19 +9,19 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      Nombre: {
+      nombre: {
         type: Sequelize.STRING,
       },
-      FechaRealizacion: {
+      fechaRealizacion: {
         type: Sequelize.DATE,
       },
-      Geolocalizacion: {
+      geolocalizacion: {
         type: Sequelize.STRING,
       },
-      Descripcion: {
+      descripcion: {
         type: Sequelize.TEXT,
       },
-      FechaCierreInscripcion: {
+      fechaCierreInscripcion: {
         type: Sequelize.DATE,
       },
       createdAt: {

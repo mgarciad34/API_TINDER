@@ -1,27 +1,28 @@
 "use strict";
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class InscripcionesEventos extends Model {
     static associate(models) {
-      InscripcionesEventos.belongsTo(models.Eventos, {
-        as: "Evento",
-        foreignKey: "EventoID",
+      InscripcionesEventos.belongsTo(models.eventos, {
+        as: "evento",
+        foreignKey: "eventoID",
       });
-      InscripcionesEventos.belongsTo(models.Usuarios, {
-        as: "Usuario",
-        foreignKey: "UsuarioID",
+      InscripcionesEventos.belongsTo(models.usuarios, {
+        as: "usuario",
+        foreignKey: "usuarioID",
       });
     }
   }
   InscripcionesEventos.init(
     {
-      UsuarioID: DataTypes.INTEGER,
-      EventoID: DataTypes.INTEGER,
-      FechaInscripcion: DataTypes.DATE,
+      usuarioID: DataTypes.INTEGER,
+      eventoID: DataTypes.INTEGER,
+      fechaInscripcion: DataTypes.DATE,
     },
     {
       sequelize,
-      modelName: "InscripcionesEventos",
+      modelName: "inscripcionesEventos",
     }
   );
   return InscripcionesEventos;

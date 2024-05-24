@@ -9,19 +9,31 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      RemitenteID: {
+      remitenteID: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "usuarios",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
-      ReceptorID: {
+      receptorID: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "usuarios",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
-      Contenido: {
+      contenido: {
         type: Sequelize.TEXT,
       },
-      FechaEnvio: {
+      fechaEnvio: {
         type: Sequelize.DATE,
       },
-      ArchivoAdjunto: {
+      ficheroAdjunto: {
         type: Sequelize.STRING,
       },
       createdAt: {

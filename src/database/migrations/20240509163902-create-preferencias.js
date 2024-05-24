@@ -9,13 +9,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      UsuarioID: {
+
+      usuarioID: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "usuarios",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
-      Tipo: {
+      tipo: {
         type: Sequelize.STRING,
       },
-      Valor: {
+      valor: {
         type: Sequelize.STRING,
       },
       createdAt: {
