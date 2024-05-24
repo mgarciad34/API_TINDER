@@ -1,23 +1,25 @@
 "use strict";
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Preferencias extends Model {
     static associate(models) {
-      Preferencias.belongsTo(models.Usuarios, {
-        as: "Usuario",
-        foreignKey: "UsuarioID",
+      Preferencias.belongsTo(models.usuarios, {
+        as: "usuario",
+        foreignKey: "usuarioID",
       });
     }
   }
+
   Preferencias.init(
     {
-      UsuarioID: DataTypes.INTEGER,
-      Tipo: DataTypes.STRING,
-      Valor: DataTypes.STRING,
+      usuarioID: DataTypes.INTEGER,
+      tipo: DataTypes.STRING,
+      valor: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: "Preferencias",
+      modelName: "preferencias",
     }
   );
   return Preferencias;

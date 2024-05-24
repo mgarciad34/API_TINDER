@@ -1,46 +1,46 @@
 "use strict";
-const { Model, DataTypes } = require("sequelize");
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Usuarios extends Model {
     static associate(models) {
-      Usuarios.belongsTo(models.Roles, { as: "Rol", foreignKey: "RolID" });
-      Usuarios.hasMany(models.Amistades, {
+      Usuarios.belongsTo(models.roles, { as: "rol", foreignKey: "rolID" });
+      Usuarios.hasMany(models.amistades, {
         as: "amistades",
-        foreignKey: "UsuarioID",
+        foreignKey: "usuarioID",
       });
-      Usuarios.hasMany(models.Amistades, {
-        as: "Amigo_amistades",
-        foreignKey: "AmigoID",
+      Usuarios.hasMany(models.amistades, {
+        as: "amigo_amistades",
+        foreignKey: "amigoID",
       });
-      Usuarios.hasMany(models.InscripcionesEventos, {
+      Usuarios.hasMany(models.inscripcionesEventos, {
         as: "inscripcioneseventos",
-        foreignKey: "UsuarioID",
+        foreignKey: "usuarioID",
       });
-      Usuarios.hasMany(models.Mensajes, {
+      Usuarios.hasMany(models.mensajes, {
         as: "mensajes",
-        foreignKey: "UsuarioID",
+        foreignKey: "receptorID",
       });
-      Usuarios.hasMany(models.Preferencias, {
+      Usuarios.hasMany(models.preferencias, {
         as: "preferencia",
-        foreignKey: "UsuarioID",
+        foreignKey: "usuarioID",
       });
     }
   }
 
   Usuarios.init(
     {
-      Nombre: DataTypes.STRING,
-      Email: DataTypes.STRING,
-      Contraseña: DataTypes.STRING,
-      Foto: DataTypes.STRING,
-      Nick: DataTypes.STRING,
-      RolID: DataTypes.INTEGER,
-      Estado: DataTypes.STRING,
+      nombre: DataTypes.STRING,
+      email: DataTypes.STRING,
+      contrasena: DataTypes.STRING,
+      foto: DataTypes.TEXT("long"),
+      nick: DataTypes.STRING,
+      rolID: DataTypes.INTEGER,
+      estado: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: "Usuarios",
+      modelName: "usuarios",
     }
   );
 
