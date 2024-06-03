@@ -4,7 +4,7 @@ const usuarios = require("../controllers/usuarios");
 const auth = require("../middlewares/auth");
 
 router.get("/usuarios", auth.authAdministrador, usuarios.obtenerUsuarios);
-router.get("/usuario/:id", auth.authAdministrador, usuarios.obtenerUsuarioId);
+router.get("/usuario/:id", usuarios.obtenerUsuarioId);
 
 router.put("/usuario/:id", usuarios.actualizarUsuario);
 router.delete("/usuario/:id", auth.authAdministrador, usuarios.eliminarUsuario);
