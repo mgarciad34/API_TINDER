@@ -282,29 +282,29 @@ const obtenerRecomendaciones = async (req, res) => {
       console.log("Preferencias del usuario:");
       console.log("Preferencias requeridas:");
       const coincide0 =
-        preferenciasUsuario[0].valor === req.body.preferencia[0].valor;
+        preferenciasUsuario[0]?.valor === req.body.preferencia[0]?.valor;
       const coincide1 = compararRango(
-        preferenciasUsuario[1].valor,
-        req.body.preferencia[1].valor
+        preferenciasUsuario[1]?.valor,
+        req.body.preferencia[1]?.valor
       );
       const coincide2 = compararRango(
-        preferenciasUsuario[2].valor,
-        req.body.preferencia[2].valor
+        preferenciasUsuario[2]?.valor,
+        req.body.preferencia[2]?.valor
       );
       const coincide3 = compararRango(
-        preferenciasUsuario[3].valor,
-        req.body.preferencia[3].valor
+        preferenciasUsuario[3]?.valor,
+        req.body.preferencia[3]?.valor
       );
       const coincide4 =
-        preferenciasUsuario[4].valor ===
-        (req.body.preferencia[4].valor === "Tengo hijos"
+        preferenciasUsuario[4]?.valor ===
+        (req.body.preferencia[4]?.valor === "Tengo hijos"
           ? "Quiero hijos"
-          : req.body.preferencia[4].valor === "No quiero hijos"
+          : req.body.preferencia[4]?.valor === "No quiero hijos"
           ? "No quiero hijos"
           : "No tengo hijos");
       const coincide5 = compararGenero(
         usuario.genero,
-        req.body.preferencia[5].valor
+        req.body.preferencia[5]?.valor
       );
 
       console.log(`Coincidencia 0: ${coincide0}`);
@@ -315,16 +315,16 @@ const obtenerRecomendaciones = async (req, res) => {
       console.log(`Coincidencia 5: ${coincide5}`);
 
       const rangosPreferenciales = [
-        req.body.preferencia[1].valor,
-        req.body.preferencia[2].valor,
-        req.body.preferencia[3].valor,
+        req.body.preferencia[1]?.valor,
+        req.body.preferencia[2]?.valor,
+        req.body.preferencia[3]?.valor,
       ];
 
       const coincideRango = rangosPreferenciales.some(
         (rango) =>
-          compararRango(preferenciasUsuario[1].valor, rango) ||
-          compararRango(preferenciasUsuario[2].valor, rango) ||
-          compararRango(preferenciasUsuario[3].valor, rango)
+          compararRango(preferenciasUsuario[1]?.valor, rango) ||
+          compararRango(preferenciasUsuario[2]?.valor, rango) ||
+          compararRango(preferenciasUsuario[3]?.valor, rango)
       );
       console.log(
         "aaaaaaaaaaaaaaaaaaaaaaaaa",
