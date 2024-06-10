@@ -9,4 +9,8 @@ router.get("/evento/:id", eventos.obtenerEventos);
 router.put("/evento/:id", auth.authAdministrador, eventos.actualizarEvento);
 router.delete("/evento/:id", auth.authAdministrador, eventos.eliminarEvento);
 
+router.post("/evento/inscribir",  eventos.inscribirseAEvento);
+router.post("/evento/desinscribir",  eventos.desinscribirseAEvento);
+
 module.exports = router;
+     
