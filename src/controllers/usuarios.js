@@ -248,9 +248,7 @@ const obtenerRecomendaciones = async (req, res) => {
   try {
     const omitir = req.body.omitir || [];
     const idsAexcluir = [req.params.id, ...omitir];
-    console.log("idsAexcluir", idsAexcluir);
 
-    // Consulta para obtener los usuarios
     const usuarios = await UsuarioModel.findAll({
       where: {
         id: {
@@ -266,9 +264,6 @@ const obtenerRecomendaciones = async (req, res) => {
     });
 
     if (!usuarios.length) {
-      console.log(
-        "No se encontraron usuarios que coincidan con los criterios de exclusión."
-      );
       return res.status(200).json([]);
     } else {
       console.log(`Se encontraron ${usuarios.length} usuarios.`);
@@ -277,7 +272,6 @@ const obtenerRecomendaciones = async (req, res) => {
     const recomendacionesFiltradas = usuarios.map((usuario) => {
       const preferenciasUsuario = usuario.preferencia;
 
-      // Logs para verificar los valores
       console.log(`Verificando usuario ${usuario.id}`);
       console.log("Preferencias del usuario:", preferenciasUsuario);
       console.log("Preferencias requeridas:", req.body.preferencia);
@@ -596,7 +590,6 @@ function obtenerRango(valor) {
   }
 }
 function compararGenero(generoUsuario, preferenciaGenero) {
-  console.log(generoUsuario, preferenciaGenero);
   if (preferenciaGenero === "Ambos") {
     return generoUsuario === "Hombre" || generoUsuario === "Mujer";
   }

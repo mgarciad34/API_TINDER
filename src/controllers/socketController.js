@@ -19,7 +19,6 @@ module.exports = (socket, io) => {
       const nuevoMensaje = await db.getModel("mensajes").create(mensaje);
 
       io.emit("recibirMensaje", nuevoMensaje);
-      // Limpiar lista de usuarios escribiendo en este chat
       chatsEscribiendo.delete(data.idChat);
     } catch (error) {
       console.error("Error al guardar el mensaje:", error);
@@ -28,7 +27,6 @@ module.exports = (socket, io) => {
 
   socket.on("obtenerHistorialMensajes", async ({ remitenteID, receptorID }) => {
     try {
-      // Obtener historial de mensajes para ambos casos de remitente y receptor
       const historial = await db.getModel("mensajes").findAll({
         where: {
           [Op.or]: [
@@ -39,7 +37,7 @@ module.exports = (socket, io) => {
         order: [["fechaEnvio", "ASC"]],
       });
 
-      socket.emit("historialMensajes", historial); // Enviar historial de mensajes al cliente
+      socket.emit("historialMensajes", historial);
     } catch (error) {
       console.error("Error al obtener el historial de mensajes:", error);
     }
@@ -47,13 +45,11 @@ module.exports = (socket, io) => {
 
   socket.on("escribiendo", (nick, idChat, reverseidChat) => {
     console.log("Usuario escribiendo:", nick, idChat, reverseidChat);
-    // Emitir evento a todos los clientes excepto al que está escribiendo
     socket.broadcast.emit("usuarioEscribiendo", nick, idChat, reverseidChat);
   });
 
   socket.on("entrarChat", (idChat) => {
     console.log("Usuario entrando al chat:", idChat);
-    // Unir al usuario al chat específico
     socket.join(idChat);
   });
 
@@ -74,17 +70,15 @@ module.exports = (socket, io) => {
     callback(usuariosActivos.size);
   });
 
-  // Verificar inactividad
   setInterval(() => {
     const now = Date.now();
     usuariosActivos.forEach((lastActive, nick) => {
       if (now - lastActive > 60000) {
-        // 60 segundos de inactividad
         console.log(`Usuario ${nick} está inactivo`);
         usuariosActivos.delete(nick);
       }
     });
-  }, 10000); // Verificar cada 10 segundos
+  }, 10000);
 
   socket.on("disconnect", () => {
     console.log("Cliente desconectado");

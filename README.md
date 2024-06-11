@@ -4,7 +4,9 @@ Servicio API REST para la creacion de una red social de citas.
 
 ## Instalación
 
-Para instalar todas las librerias usamos el comando
+Lo primero que tenemos que hacer es cambiar el nombre al archivo **.env.example** por **.env**.
+
+Despues instalamos todas las librerias usando el comando
 
 ```http
   npm install

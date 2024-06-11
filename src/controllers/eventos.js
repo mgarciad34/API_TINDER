@@ -30,15 +30,14 @@ const obtenerEventos = async (req, res) => {
       ],
     });
 
-    eventos.forEach(evento => {
-          if(evento.dataValues.fechaRealizacion < new Date()){   
-               eliminarEventoBackend(evento.dataValues.id);
-               eventos.splice(eventos.indexOf(evento), 1);
-          }
+    eventos.forEach((evento) => {
+      if (evento.dataValues.fechaRealizacion < new Date()) {
+        eliminarEventoBackend(evento.dataValues.id);
+        eventos.splice(eventos.indexOf(evento), 1);
+      }
     });
 
     res.status(200).json(eventos);
-
   } catch (error) {
     res.status(500).json({ error: error.message });
     console.error(error);
@@ -112,59 +111,55 @@ const eliminarEvento = async (req, res) => {
 };
 
 const inscribirseAEvento = async (req, res) => {
-     console.log("req.body", req.body)
-     try {
+  try {
+    const inscripcionExistente = await InscripcionesEventosModel.findOne({
+      where: { usuarioID: req.body.idUsuario, eventoID: req.body.idEvento },
+    });
 
-          const inscripcionExistente = await InscripcionesEventosModel.findOne({
-               where: { usuarioID: req.body.idUsuario, eventoID: req.body.idEvento },
-          });
+    if (inscripcionExistente) {
+      return res
+        .status(404)
+        .json({ error: "Ya se encuentra inscripto en este evento" });
+    }
 
-          if (inscripcionExistente) {
-               console.log("existeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-               return res
-                    .status(404)
-                    .json({ error: "Ya se encuentra inscripto en este evento" });
-          }
+    const nuevaInscripcion = await InscripcionesEventosModel.create({
+      usuarioID: req.body.idUsuario,
+      eventoID: req.body.idEvento,
+      fechaInscripcion: new Date(),
+    });
 
-          const nuevaInscripcion = await InscripcionesEventosModel.create({
-               usuarioID: req.body.idUsuario,
-               eventoID: req.body.idEvento,
-               fechaInscripcion: new Date(),
-          });
-
-          res.status(201).json(nuevaInscripcion);
-
-     } catch (error) {
-     res.status(500).json({ error: error.message });
-     console.error(error);
-     }
-     }
+    res.status(201).json(nuevaInscripcion);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.error(error);
+  }
+};
 
 const desinscribirseAEvento = async (req, res) => {
-     console.log("req.body.idUsuario", req.body.idUsuario)
-     console.log("req.body.idEvento", req.body)
-     try {
-          const inscripcion = await InscripcionesEventosModel.destroy({
-               where: { usuarioID: req.body.idUsuario, eventoID: req.body.idEvento },
-          });
-     
-          if (inscripcion === 0) {
-               return res
-                    .status(404)
-                    .json({ error: "Inscripción no encontrada o ya fue eliminada" });
-          }
-     
-          return res.status(200).json({ mensaje: "Inscripción eliminada exitosamente" });
-     } catch (error) {
-          res.status(500).json({ error: error.message });
-          console.error(error);
-     }
-     }
+  try {
+    const inscripcion = await InscripcionesEventosModel.destroy({
+      where: { usuarioID: req.body.idUsuario, eventoID: req.body.idEvento },
+    });
 
-function eliminarEventoBackend(id){
-     EventosModel.destroy({
-     where: { id: id },
-     });
+    if (inscripcion === 0) {
+      return res
+        .status(404)
+        .json({ error: "Inscripción no encontrada o ya fue eliminada" });
+    }
+
+    return res
+      .status(200)
+      .json({ mensaje: "Inscripción eliminada exitosamente" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.error(error);
+  }
+};
+
+function eliminarEventoBackend(id) {
+  EventosModel.destroy({
+    where: { id: id },
+  });
 }
 module.exports = {
   crearEvento,

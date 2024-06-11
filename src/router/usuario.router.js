@@ -5,10 +5,8 @@ const auth = require("../middlewares/auth");
 
 router.post("/login", usuarios.login);
 
-// Definir la ruta para registrar un nuevo usuario
 router.post("/registrar", usuarios.crearUsuario);
 
-//Ruta para recuperar la contraseña
 router.post("/recuperar", usuarios.recuperarContrasena);
 
 router.get("/usuarios", auth.authAdministrador, usuarios.obtenerUsuarios);
