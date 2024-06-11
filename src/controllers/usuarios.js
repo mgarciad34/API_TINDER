@@ -274,13 +274,14 @@ const obtenerRecomendaciones = async (req, res) => {
       console.log(`Se encontraron ${usuarios.length} usuarios.`);
     }
 
-    const recomendacionesFiltradas = usuarios.filter((usuario) => {
+    const recomendacionesFiltradas = usuarios.map((usuario) => {
       const preferenciasUsuario = usuario.preferencia;
 
       // Logs para verificar los valores
       console.log(`Verificando usuario ${usuario.id}`);
-      console.log("Preferencias del usuario:");
-      console.log("Preferencias requeridas:");
+      console.log("Preferencias del usuario:", preferenciasUsuario);
+      console.log("Preferencias requeridas:", req.body.preferencia);
+
       const coincide0 =
         preferenciasUsuario[0]?.valor === req.body.preferencia[0]?.valor;
       const coincide1 = compararRango(
@@ -326,25 +327,59 @@ const obtenerRecomendaciones = async (req, res) => {
           compararRango(preferenciasUsuario[2]?.valor, rango) ||
           compararRango(preferenciasUsuario[3]?.valor, rango)
       );
-      console.log(
-        "aaaaaaaaaaaaaaaaaaaaaaaaa",
-        coincide0 && coincideRango && coincide4 && coincide5
-      );
-      return coincide0 && coincideRango && coincide4 && coincide5;
+
+      const totalCoincidencias = [
+        coincide0,
+        coincide1,
+        coincide2,
+        coincide3,
+        coincide4,
+        coincide5,
+      ].filter(Boolean).length;
+
+      // Calcular la afinidad basada en una valoración del 1 al 5
+      const afinidad =
+        (((coincide0 ? 1 : 0) +
+          (coincide1 ? 1 : 0) +
+          (coincide2 ? 1 : 0) +
+          (coincide3 ? 1 : 0) +
+          (coincide4 ? 1 : 0) +
+          (coincide5 ? 1 : 0)) /
+          6) *
+        5; // Escalar a una valoración del 1 al 5
+
+      console.log("Total de coincidencias:", totalCoincidencias);
+      console.log("Afinidad:", afinidad);
+
+      return {
+        usuario,
+        totalCoincidencias,
+        afinidad,
+        coincide: coincide0 && coincideRango && coincide4 && coincide5,
+      };
     });
 
-    if (!recomendacionesFiltradas.length) {
-      console.log(
-        "No se encontraron recomendaciones que coincidan con las preferencias."
-      );
-    } else {
-      console.log(
-        `Se encontraron ${recomendacionesFiltradas.length} recomendaciones que coinciden.`
-      );
-    }
+    // Filtrar usuarios que cumplen con las coincidencias básicas
+    const usuariosFiltrados = recomendacionesFiltradas.filter(
+      (recomendacion) => recomendacion.coincide
+    );
+
+    // Ordenar por afinidad y luego por total de coincidencias
+    usuariosFiltrados.sort((a, b) => {
+      if (b.afinidad === a.afinidad) {
+        return b.totalCoincidencias - a.totalCoincidencias;
+      }
+      return b.afinidad - a.afinidad;
+    });
+
+    const resultadoFinal = usuariosFiltrados.map(
+      (recomendacion) => recomendacion.usuario
+    );
+
+    console.log("Usuarios recomendados:", resultadoFinal);
 
     const cantidadSolicitada = req.body.cantidad || 5;
-    const recomendacionesLimitadas = recomendacionesFiltradas.slice(
+    const recomendacionesLimitadas = resultadoFinal.slice(
       0,
       cantidadSolicitada
     );
