@@ -1,5 +1,3 @@
-// src/controllers/mensajes.controller.js
-
 const db = require("../database/models");
 const { Op } = require("sequelize");
 const mensajesModel = db.getModel("mensajes");
