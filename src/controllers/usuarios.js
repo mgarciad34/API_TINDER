@@ -200,9 +200,7 @@ const recuperarContrasena = async (req, res) => {
         message: "Usuario no encontrado",
       });
     } else {
-      // Generar una contraseña aleatoria
       const nuevaContrasena = generarContrasenaAleatoria();
-      // Actualizar la contraseña del usuario
       usuario.contrasena = await bcrypt.hash(nuevaContrasena, 10);
 
       await usuario.save();
@@ -272,10 +270,6 @@ const obtenerRecomendaciones = async (req, res) => {
     const recomendacionesFiltradas = usuarios.map((usuario) => {
       const preferenciasUsuario = usuario.preferencia;
 
-      console.log(`Verificando usuario ${usuario.id}`);
-      console.log("Preferencias del usuario:", preferenciasUsuario);
-      console.log("Preferencias requeridas:", req.body.preferencia);
-
       const coincide0 =
         preferenciasUsuario[0]?.valor === req.body.preferencia[0]?.valor;
       const coincide1 = compararRango(
@@ -302,13 +296,6 @@ const obtenerRecomendaciones = async (req, res) => {
         req.body.preferencia[5]?.valor
       );
 
-      console.log(`Coincidencia 0: ${coincide0}`);
-      console.log(`Coincidencia 1: ${coincide1}`);
-      console.log(`Coincidencia 2: ${coincide2}`);
-      console.log(`Coincidencia 3: ${coincide3}`);
-      console.log(`Coincidencia 4: ${coincide4}`);
-      console.log(`Coincidencia 5: ${coincide5}`);
-
       const rangosPreferenciales = [
         req.body.preferencia[1]?.valor,
         req.body.preferencia[2]?.valor,
@@ -331,7 +318,6 @@ const obtenerRecomendaciones = async (req, res) => {
         coincide5,
       ].filter(Boolean).length;
 
-      // Calcular la afinidad basada en una valoración del 1 al 5
       const afinidad =
         (((coincide0 ? 1 : 0) +
           (coincide1 ? 1 : 0) +
@@ -340,10 +326,7 @@ const obtenerRecomendaciones = async (req, res) => {
           (coincide4 ? 1 : 0) +
           (coincide5 ? 1 : 0)) /
           6) *
-        5; // Escalar a una valoración del 1 al 5
-
-      console.log("Total de coincidencias:", totalCoincidencias);
-      console.log("Afinidad:", afinidad);
+        5; 
 
       return {
         usuario,
@@ -353,12 +336,10 @@ const obtenerRecomendaciones = async (req, res) => {
       };
     });
 
-    // Filtrar usuarios que cumplen con las coincidencias básicas
     const usuariosFiltrados = recomendacionesFiltradas.filter(
       (recomendacion) => recomendacion.coincide
     );
 
-    // Ordenar por afinidad y luego por total de coincidencias
     usuariosFiltrados.sort((a, b) => {
       if (b.afinidad === a.afinidad) {
         return b.totalCoincidencias - a.totalCoincidencias;
@@ -369,8 +350,6 @@ const obtenerRecomendaciones = async (req, res) => {
     const resultadoFinal = usuariosFiltrados.map(
       (recomendacion) => recomendacion.usuario
     );
-
-    console.log("Usuarios recomendados:", resultadoFinal);
 
     const cantidadSolicitada = req.body.cantidad || 5;
     const recomendacionesLimitadas = resultadoFinal.slice(
@@ -462,8 +441,7 @@ const dislike = async (req, res) => {
         .status(404)
         .json({ error: "Usuario " + amigoID + " no encontrado" });
     }
-
-    console.log(usuarioID, amigoID);
+;
     const existeAmistad = await AmistadesModel.findOne({
       where: {
         [Op.or]: [
@@ -519,7 +497,6 @@ const verificarAmistad = async (req, res) => {
   try {
     const { usuarioID, amigoID } = req.body;
 
-    // Verificar si usuarioID existe
     const existeUsuarioID = await UsuarioModel.findByPk(usuarioID);
     if (!existeUsuarioID) {
       return res
@@ -527,7 +504,6 @@ const verificarAmistad = async (req, res) => {
         .json({ error: "Usuario " + usuarioID + " no encontrado" });
     }
 
-    // Verificar si amigoID existe
     const existeAmigoID = await UsuarioModel.findByPk(amigoID);
     if (!existeAmigoID) {
       return res
@@ -535,7 +511,6 @@ const verificarAmistad = async (req, res) => {
         .json({ error: "Usuario " + amigoID + " no encontrado" });
     }
 
-    // Verificar si existe la amistad
     const existeAmistad = await AmistadesModel.findOne({
       where: {
         [Op.or]: [
