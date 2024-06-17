@@ -5,7 +5,6 @@ const chatsEscribiendo = new Map();
 let usuariosActivos = new Map();
 
 module.exports = (socket, io) => {
-  console.log("Nuevo cliente conectado");
 
   socket.on("sendMessage", async (data) => {
     try {
@@ -44,18 +43,15 @@ module.exports = (socket, io) => {
   });
 
   socket.on("escribiendo", (nick, idChat, reverseidChat) => {
-    console.log("Usuario escribiendo:", nick, idChat, reverseidChat);
     socket.broadcast.emit("usuarioEscribiendo", nick, idChat, reverseidChat);
   });
 
   socket.on("entrarChat", (idChat) => {
-    console.log("Usuario entrando al chat:", idChat);
     socket.join(idChat);
   });
 
   socket.on("usuarioActivo", (nick) => {
     usuariosActivos.set(nick, Date.now());
-    console.log(`Usuario ${nick} está activo`);
   });
 
   socket.on("verificarUsuariosActivos", (userNicks, callback) => {
@@ -74,16 +70,12 @@ module.exports = (socket, io) => {
     const now = Date.now();
     usuariosActivos.forEach((lastActive, nick) => {
       if (now - lastActive > 60000) {
-        console.log(`Usuario ${nick} está inactivo`);
         usuariosActivos.delete(nick);
       }
     });
   }, 10000);
 
   socket.on("disconnect", () => {
-    console.log("Cliente desconectado");
-
-    // Manejar la desconexión del usuario eliminándolo de la lista de usuarios escribiendo en cada chat
     for (const [idChat, usuariosEscribiendo] of chatsEscribiendo.entries()) {
       const index = usuariosEscribiendo.indexOf(socket.nick);
       if (index !== -1) {

@@ -42,7 +42,7 @@ const crearMensaje = async (req, res) => {
       ficheroAdjunto: req.body.ficheroAdjunto,
     };
     const nuevoMensaje = await mensajesModel.create(mensaje);
-    res.status(201).json(nuevoMensaje); // Devuelve el mensaje creado
+    res.status(201).json(nuevoMensaje);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
